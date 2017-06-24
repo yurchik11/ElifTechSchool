@@ -1,0 +1,56 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #fff;
+    background: url(../images/background.jpg)
+}
+
+.item {
+  cursor: pointer;
+  list-style-type: none;
+}
+.bold {
+  font-weight: bold;
+}
+ul {
+  padding-left: 1em;
+  line-height: 1.5em;
+ /* list-style-type: dot;*/
+}
+
+.myborder {
+    background:#333;
+    overflow:hidden;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    border:#666 solid 2px;
+}
+
+#myTree {
+    padding: 20px;
+    width: 500px;
+    margin:60px auto;
+}
+
+.hiid {
+    display: none;
+}
+.modal-content {
+    color: #000000;
+    margin: 20px;
+}
+.form-group {
+    height: 30px;
+    margin: 15px;
+}

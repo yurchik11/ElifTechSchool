@@ -77,7 +77,9 @@ var saveChangesEl = new Vue({
                     }
                 clickedModel.Name = temp.Name;
                 clickedModel.Earning = temp.Earning;
-                PageMethods.EditCompany(temp);
+                PageMethods.EditCompany(temp, function (response) {
+                    demo.treeData = response;
+                });
             }
             $("#closeModalBtn").click();
         }

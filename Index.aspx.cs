@@ -30,23 +30,27 @@ namespace ElifTechSchool
         public static Company GetDataForTree()
         {
             context = new CompaniesTreeEntities();
-            var mainCompanyFromDB = context.Companies.First(c => c.ID == 1);
+
+            var mainCompanyFromDB = context.Companies.First(c => c.ID == 25);
+           
             Company mainCompany = new Company();
             mainCompany.ID = mainCompanyFromDB.ID;
             mainCompany.Name = mainCompanyFromDB.Name;
             mainCompany.Earning = mainCompanyFromDB.Earning;
-
             
             decimal? earningWithChild;
             mainCompany.children = SearchSubCompanies(mainCompany.ID, out earningWithChild);
             mainCompany.EarningWithChild = mainCompany.Earning + earningWithChild;
+
             //***BBBBBBBUUUUUUUUUUGGGGGGGGGGGG***
+            
             foreach (var myCompany in mainCompany.children)
             {
                 if (context.Companies.Count(c => c.ID == myCompany.ID) > 0)
                 {
                     myCompany.children = SearchSubCompanies(myCompany.ID,out earningWithChild);
                     myCompany.EarningWithChild = myCompany.Earning + earningWithChild;
+                   
                 }
                 foreach (var mySubCompany in myCompany.children)
                 {
@@ -54,6 +58,7 @@ namespace ElifTechSchool
                     {
                         mySubCompany.children = SearchSubCompanies(mySubCompany.ID, out earningWithChild);
                         mySubCompany.EarningWithChild = mySubCompany.Earning + earningWithChild;
+                        mainCompany.EarningWithChild += mySubCompany.EarningWithChild;
                     }
                     foreach (var mySubSubCompany in mySubCompany.children)
                     {
@@ -61,14 +66,25 @@ namespace ElifTechSchool
                         {
                             mySubSubCompany.children = SearchSubCompanies(mySubSubCompany.ID, out earningWithChild);
                             mySubSubCompany.EarningWithChild = mySubSubCompany.Earning + earningWithChild;
+                            myCompany.EarningWithChild += mySubSubCompany.EarningWithChild;
+                        }
+                        foreach (var mySubSubSubCompany in mySubSubCompany.children)
+                        {
+                            if (context.Companies.Count(c => c.ID == mySubSubSubCompany.ID) > 0)
+                            {
+                                mySubSubSubCompany.children = SearchSubCompanies(mySubSubSubCompany.ID, out earningWithChild);
+                                mySubSubSubCompany.EarningWithChild = mySubSubSubCompany.Earning + earningWithChild;
+                                mySubCompany.EarningWithChild += mySubSubSubCompany.EarningWithChild;
+                                myCompany.EarningWithChild += mySubSubSubCompany.EarningWithChild;
+                                mainCompany.EarningWithChild += mySubSubSubCompany.EarningWithChild;
+                            }
                         }
                     }
                 }
             }
-
             return mainCompany;
         }
-
+        
         private static List<Company> SearchSubCompanies(int idMainCompany, out decimal? earningWithChild)
         {
             var mySubCompaniesFromDB = context.Companies.Where(c => c.BelongToID == idMainCompany).ToList();
@@ -105,13 +121,14 @@ namespace ElifTechSchool
 
         [System.Web.Services.WebMethod()]
         [System.Web.Script.Services.ScriptMethod()]
-        public static void EditCompany(Company company)
+        public static Company EditCompany(Company company)
         {
             context = new CompaniesTreeEntities();
             var companyDB = context.Companies.First(c => c.ID == company.ID);
             companyDB.Earning = company.Earning;
             companyDB.Name = company.Name;
             context.SaveChanges();
+            return GetDataForTree();
         }
 
         [System.Web.Services.WebMethod()]
@@ -119,10 +136,15 @@ namespace ElifTechSchool
         public static Company DeleteCompany(int clickedID)
         {
             context = new CompaniesTreeEntities();
-            var companyDB = context.Companies.First(c => c.ID == clickedID);
-            context.Companies.Remove(companyDB);
-            context.SaveChanges();
+            if (clickedID != 25)
+            {
+                var companyDB = context.Companies.First(c => c.ID == clickedID);
+               // RemoveBelonged(clickedID);
+                context.Companies.Remove(companyDB);
+                context.SaveChanges();
+            }
             return GetDataForTree();
         }
+
     }
 }

@@ -67,6 +67,7 @@
 
 </div>
     <div id="myTree" class="myborder">
+        <p><i>Please, use the right mouse button to add/edit/delete</i></p>
         <ul id="demo">
             <item class="item context-menu-one" :model="treeData"></item>
         </ul>
